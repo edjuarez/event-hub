@@ -1,12 +1,9 @@
-import './App.css'
+import './App.css';
+import { EventsPage } from "./pages/EventsPage";
 
 function App() {
 
-  return (
-    <div className="bg-background text-ink">
-      <h1 className="text-2xl font-bold">EventHub</h1>
-    </div>
-  )
+  return <EventsPage />;
 }
 
 export default App
