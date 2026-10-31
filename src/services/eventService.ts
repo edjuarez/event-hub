@@ -1,11 +1,14 @@
+import { generateEvents } from "../data/generateEvents";
 import type { CalendarEvent } from "../types/event";
 
-export async function getEvents(): Promise<CalendarEvent[]> {
-  const response = await fetch("/data/events.json");
+const TOTAL_EVENTS = 100_000;
 
-  if (!response.ok) {
-    throw new Error("Failed to load events");
+let eventsCache: CalendarEvent[] | null = null;
+
+export async function getEvents(): Promise<CalendarEvent[]> {
+  if (!eventsCache) {
+    eventsCache = generateEvents(TOTAL_EVENTS);
   }
 
-  return response.json();
+  return eventsCache;
 }

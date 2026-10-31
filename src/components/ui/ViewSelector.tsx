@@ -1,4 +1,3 @@
-
 export type EventsView = "table" | "timeline";
 
 interface ViewSelectorProps {
@@ -6,10 +5,7 @@ interface ViewSelectorProps {
   onViewChange: (view: EventsView) => void;
 }
 
-export function ViewSelector({
-  activeView,
-  onViewChange,
-}: ViewSelectorProps) {
+export function ViewSelector({ activeView, onViewChange }: ViewSelectorProps) {
   const options: { value: EventsView; label: string }[] = [
     { value: "table", label: "Table View" },
     { value: "timeline", label: "Timeline View" },

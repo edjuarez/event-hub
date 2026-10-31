@@ -1,21 +1,20 @@
-
 @import "tailwindcss";
 :root {
-  --brand-ink: #172B3A;
-  --brand-coral: #F07861;
-  --brand-sage: #8FAE9B;
+  --brand-ink: #172b3a;
+  --brand-coral: #f07861;
+  --brand-sage: #8fae9b;
 
-  --background: #F7F6F2;
-  --surface: #FFFFFF;
-  --surface-muted: #EFEEE8;
+  --background: #f7f6f2;
+  --surface: #ffffff;
+  --surface-muted: #efeee8;
 
   --text-primary: #263746;
-  --text-muted: #78838A;
-  --border: #E5E4DE;
+  --text-muted: #78838a;
+  --border: #e5e4de;
 
-  --success: #638B72;
-  --warning: #D9A441;
-  --danger: #D7655D;
+  --success: #638b72;
+  --warning: #d9a441;
+  --danger: #d7655d;
 
   font-family: "Manrope", sans-serif;
   color: var(--text-primary);

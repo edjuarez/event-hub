@@ -1,9 +1,5 @@
-
 export type EventStatus =
-  | "scheduled"
-  | "in-progress"
-  | "completed"
-  | "cancelled";
+  "scheduled" | "in-progress" | "completed" | "cancelled";
 
 export interface CalendarEvent {
   id: string;
