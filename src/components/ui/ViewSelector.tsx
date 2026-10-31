@@ -7,8 +7,8 @@ interface ViewSelectorProps {
 
 export function ViewSelector({ activeView, onViewChange }: ViewSelectorProps) {
   const options: { value: EventsView; label: string }[] = [
-    { value: "table", label: "Table View" },
-    { value: "timeline", label: "Timeline View" },
+    { value: "table", label: "Data Grid" },
+    { value: "timeline", label: "Timeline" },
   ];
 
   return (

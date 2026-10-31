@@ -10,15 +10,32 @@ export const gridColumns: ColumnDef<CalendarEvent, unknown>[] = [
   },
   {
     accessorKey: "date",
-    header: "Date",
+    header: "Date & Time",
     cell: ({ getValue }) => {
       const date = new Date(getValue<string>());
 
-      return date.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      });
+      if (Number.isNaN(date.getTime())) {
+        return "Invalid date";
+      }
+
+      return (
+        <div className="flex flex-col">
+          <span className="font-medium text-text-primary">
+            {date.toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })}
+          </span>
+          <span className="text-xs text-text-muted">
+            {date.toLocaleTimeString("en-GB", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            })}
+          </span>
+        </div>
+      );
     },
     enableColumnFilter: false,
   },

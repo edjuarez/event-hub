@@ -5,6 +5,7 @@ import { SummaryCards } from "../components/ui/SummaryCards";
 import { ViewSelector, type EventsView } from "../components/ui/ViewSelector";
 import { DataGrid } from "../components/DataGrid/DataGrid";
 import { gridColumns } from "../config/gridColumns";
+import { Timeline } from "../components/Timeline/Timeline";
 
 export function EventsPage() {
   const { events, loading, error } = useEvents();
@@ -83,9 +84,10 @@ export function EventsPage() {
               error={error}
             />
           ) : (
-            <div className="flex min-h-64 items-center justify-center p-8">
-              <p className="text-sm text-text-muted">Timeline view.</p>
-            </div>
+            <Timeline
+              events={events.slice(0, 10_000)}
+              totalCount={events.length}
+            />
           )}
         </div>
       </section>
