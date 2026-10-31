@@ -73,7 +73,7 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
             onChange={(event) =>
               categoryColumn?.setFilterValue(event.target.value || undefined)
             }
-            className="h-[38px] rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-coral"
+            className="h-[38px] rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-coral cursor-pointer"
           >
             <option value="">All categories</option>
 
@@ -99,7 +99,7 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
             onChange={(event) =>
               statusColumn?.setFilterValue(event.target.value || undefined)
             }
-            className="h-[38px] rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-coral"
+            className="h-[38px] rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-coral cursor-pointer"
           >
             <option value="">All statuses</option>
 

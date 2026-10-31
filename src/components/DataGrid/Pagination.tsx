@@ -58,7 +58,7 @@ export function Pagination<TData>({ table }: PaginationProps<TData>) {
           id="page-size"
           value={pageSize}
           onChange={(event) => table.setPageSize(Number(event.target.value))}
-          className="rounded-md border border-border bg-surface px-2 py-1 text-text"
+          className="rounded-md border border-border bg-surface px-2 py-1 text-text cursor-pointer"
         >
           {[10, 25, 50, 100].map((size) => (
             <option key={size} value={size}>
@@ -79,7 +79,7 @@ export function Pagination<TData>({ table }: PaginationProps<TData>) {
             aria-label="Go to first page"
             disabled={!table.getCanPreviousPage()}
             onClick={() => table.setPageIndex(0)}
-            className="rounded-md px-2 py-1 hover:bg-surface-muted disabled:opacity-40"
+            className="rounded-md px-2 py-1 hover:bg-surface-muted disabled:opacity-40 cursor-pointer"
           >
             «
           </button>
@@ -89,7 +89,7 @@ export function Pagination<TData>({ table }: PaginationProps<TData>) {
             aria-label="Go to previous page"
             disabled={!table.getCanPreviousPage()}
             onClick={() => table.previousPage()}
-            className="rounded-md px-2 py-1 hover:bg-surface-muted disabled:opacity-40"
+            className="rounded-md px-2 py-1 hover:bg-surface-muted disabled:opacity-40 cursor-pointer"
           >
             ‹
           </button>
@@ -106,7 +106,7 @@ export function Pagination<TData>({ table }: PaginationProps<TData>) {
                 aria-label={`Go to page ${page + 1}`}
                 aria-current={currentPage === page ? "page" : undefined}
                 onClick={() => table.setPageIndex(page)}
-                className={`min-w-8 rounded-md px-2 py-1 ${
+                className={`min-w-8 rounded-md px-2 py-1 cursor-pointer ${
                   currentPage === page
                     ? "bg-ink text-white"
                     : "hover:bg-surface-muted"
@@ -122,7 +122,7 @@ export function Pagination<TData>({ table }: PaginationProps<TData>) {
             aria-label="Go to next page"
             disabled={!table.getCanNextPage()}
             onClick={() => table.nextPage()}
-            className="rounded-md px-2 py-1 hover:bg-surface-muted disabled:opacity-40"
+            className="rounded-md px-2 py-1 hover:bg-surface-muted disabled:opacity-40 cursor-pointer"
           >
             ›
           </button>
@@ -132,7 +132,7 @@ export function Pagination<TData>({ table }: PaginationProps<TData>) {
             aria-label="Go to last page"
             disabled={!table.getCanNextPage()}
             onClick={() => table.setPageIndex(totalPages - 1)}
-            className="rounded-md px-2 py-1 hover:bg-surface-muted disabled:opacity-40"
+            className="rounded-md px-2 py-1 hover:bg-surface-muted disabled:opacity-40 cursor-pointer"
           >
             »
           </button>
