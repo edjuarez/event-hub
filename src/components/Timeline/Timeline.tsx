@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { KeyboardEvent } from "react";
@@ -7,9 +6,11 @@ import type { CalendarEvent } from "../../types/event";
 import { groupEventsByDay } from "../../utils/groupEventsByDay";
 import { TimelineGroup } from "./TimelineGroup";
 import { TimelineItem } from "./TimelineItem";
+import { TimelineToolbar } from "./TimelineToolbar";
 
 interface TimelineProps {
   events: CalendarEvent[];
+  totalCount: number;
 }
 
 type TimelineRow =
@@ -25,12 +26,13 @@ type TimelineRow =
       key: string;
       groupIndex: number;
       eventIndex: number;
+      eventNumber: number;
       date: Date;
       event: CalendarEvent;
       headingId: string;
     };
 
-export function Timeline({ events }: TimelineProps) {
+export function Timeline({ events, totalCount }: TimelineProps) {
   const parentRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef(new Map<string, HTMLElement>());
 
@@ -44,6 +46,7 @@ export function Timeline({ events }: TimelineProps) {
 
   const rows = useMemo<TimelineRow[]>(() => {
     const result: TimelineRow[] = [];
+    let eventNumber = 0;
 
     groups.forEach((group, groupIndex) => {
       result.push({
@@ -55,11 +58,14 @@ export function Timeline({ events }: TimelineProps) {
       });
 
       group.events.forEach((event, eventIndex) => {
+        eventNumber += 1;
+
         result.push({
           type: "event",
           key: `event-${event.id}`,
           groupIndex,
           eventIndex,
+          eventNumber,
           date: group.date,
           event,
           headingId: `timeline-heading-${group.dateKey}`,
@@ -80,7 +86,25 @@ export function Timeline({ events }: TimelineProps) {
 
   const virtualItems = virtualizer.getVirtualItems();
 
-  const firstEventKey = rows.find((row) => row.type === "event")?.key ?? null;
+  const eventRowIndexes = useMemo(
+    () =>
+      rows.reduce<number[]>((indexes, row, index) => {
+        if (row.type === "event") {
+          indexes.push(index);
+        }
+
+        return indexes;
+      }, []),
+    [rows],
+  );
+
+  const firstEventKey = eventRowIndexes.length
+    ? rows[eventRowIndexes[0]].key
+    : null;
+
+  const hasActiveEvent = rows.some(
+    (row) => row.type === "event" && row.key === activeEventKey,
+  );
 
   const focusEvent = (rowIndex: number) => {
     const row = rows[rowIndex];
@@ -91,6 +115,18 @@ export function Timeline({ events }: TimelineProps) {
 
     setPendingFocusIndex(rowIndex);
     virtualizer.scrollToIndex(rowIndex, { align: "auto" });
+  };
+
+  const goToStart = () => {
+    if (eventRowIndexes.length > 0) {
+      focusEvent(eventRowIndexes[0]);
+    }
+  };
+
+  const goToEnd = () => {
+    if (eventRowIndexes.length > 0) {
+      focusEvent(eventRowIndexes[eventRowIndexes.length - 1]);
+    }
   };
 
   useEffect(() => {
@@ -127,43 +163,32 @@ export function Timeline({ events }: TimelineProps) {
 
     switch (event.key) {
       case "ArrowLeft":
-      case "ArrowRight": {
-        const direction = event.key === "ArrowRight" ? 1 : -1;
+      case "ArrowUp": {
+        event.preventDefault();
 
-        for (
-          let index = currentRowIndex + direction;
-          index >= 0 && index < rows.length;
-          index += direction
-        ) {
-          if (rows[index].type === "event") {
-            targetRowIndex = index;
-            break;
-          }
-        }
-
+        const currentPosition = eventRowIndexes.indexOf(currentRowIndex);
+        targetRowIndex = eventRowIndexes[currentPosition - 1];
         break;
       }
 
-      case "ArrowUp":
+      case "ArrowRight":
       case "ArrowDown": {
-        const direction = event.key === "ArrowDown" ? 1 : -1;
-        const targetGroupIndex = currentRow.groupIndex + direction;
-        const targetGroup = groups[targetGroupIndex];
+        event.preventDefault();
 
-        if (targetGroup && targetGroup.events.length > 0) {
-          const targetEventIndex = Math.min(
-            currentRow.eventIndex,
-            targetGroup.events.length - 1,
-          );
+        const currentPosition = eventRowIndexes.indexOf(currentRowIndex);
+        targetRowIndex = eventRowIndexes[currentPosition + 1];
+        break;
+      }
 
-          const targetEvent = targetGroup.events[targetEventIndex];
+      case "Home": {
+        event.preventDefault();
+        targetRowIndex = eventRowIndexes[0];
+        break;
+      }
 
-          targetRowIndex = rows.findIndex(
-            (row) =>
-              row.type === "event" && row.event.id === targetEvent.id,
-          );
-        }
-
+      case "End": {
+        event.preventDefault();
+        targetRowIndex = eventRowIndexes[eventRowIndexes.length - 1];
         break;
       }
 
@@ -171,15 +196,12 @@ export function Timeline({ events }: TimelineProps) {
         return;
     }
 
-    if (targetRowIndex !== undefined && targetRowIndex >= 0) {
-      event.preventDefault();
+    if (targetRowIndex !== undefined) {
       focusEvent(targetRowIndex);
     }
   };
 
-  const handleItemFocus = (
-    row: Extract<TimelineRow, { type: "event" }>,
-  ) => {
+  const handleItemFocus = (row: Extract<TimelineRow, { type: "event" }>) => {
     const formattedDate = row.date.toLocaleDateString("en-US", {
       weekday: "long",
       month: "long",
@@ -190,9 +212,7 @@ export function Timeline({ events }: TimelineProps) {
     setActiveEventKey(row.key);
 
     setAnnouncement(
-      `${row.event.title}. ${formattedDate}. Event ${
-        row.eventIndex + 1
-      } of ${groups[row.groupIndex].events.length}.`,
+      `${row.event.title}. ${formattedDate}. Event ${row.eventNumber} of ${events.length}.`,
     );
   };
 
@@ -209,10 +229,18 @@ export function Timeline({ events }: TimelineProps) {
 
   return (
     <div className="space-y-3">
+      <TimelineToolbar
+        displayedCount={events.length}
+        totalCount={totalCount}
+        onGoToStart={goToStart}
+        onGoToEnd={goToEnd}
+      />
+
       <div
         ref={parentRef}
         role="region"
         aria-label="Events timeline"
+        tabIndex={-1}
         className="h-[680px] overflow-y-auto rounded-xl border border-border bg-background px-4"
       >
         <div
@@ -239,14 +267,14 @@ export function Timeline({ events }: TimelineProps) {
                     headingId={`timeline-heading-${groups[row.groupIndex].dateKey}`}
                   />
                 ) : (
-                  <div className="pl-4">
+                  <div className="w-full min-w-0 pl-4">
                     <TimelineItem
                       event={row.event}
+                      eventNumber={row.eventNumber}
                       headingId={row.headingId}
                       tabIndex={
-                        activeEventKey === row.key ||
-                        (activeEventKey === null &&
-                          row.key === firstEventKey)
+                        (hasActiveEvent && activeEventKey === row.key) ||
+                        (!hasActiveEvent && row.key === firstEventKey)
                           ? 0
                           : -1
                       }

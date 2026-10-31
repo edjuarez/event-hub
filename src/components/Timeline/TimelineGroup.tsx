@@ -18,10 +18,7 @@ export function TimelineGroup({
 
   return (
     <div className="flex items-center justify-between border-b border-border bg-background/95 py-3">
-      <h2
-        id={headingId}
-        className="font-semibold text-text-primary"
-      >
+      <h2 id={headingId} className="font-semibold text-text-primary">
         {formattedDate}
       </h2>
 

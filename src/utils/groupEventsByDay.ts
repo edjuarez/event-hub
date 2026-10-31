@@ -14,9 +14,7 @@ function getLocalDateKey(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-export function groupEventsByDay(
-  events: CalendarEvent[],
-): TimelineGroupData[] {
+export function groupEventsByDay(events: CalendarEvent[]): TimelineGroupData[] {
   const groups = new Map<string, TimelineGroupData>();
 
   for (const event of events) {

@@ -84,7 +84,10 @@ export function EventsPage() {
               error={error}
             />
           ) : (
-            <Timeline events={events.slice(0, 10_000)} />
+            <Timeline
+              events={events.slice(0, 10_000)}
+              totalCount={events.length}
+            />
           )}
         </div>
       </section>
