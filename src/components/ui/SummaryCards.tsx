@@ -1,4 +1,3 @@
-
 interface SummaryCardsProps {
   total: number;
   scheduled: number;
@@ -40,17 +39,13 @@ export function SummaryCards({
           key={card.key}
           className="rounded-xl border border-border bg-surface p-5"
         >
-          <p className="text-sm font-medium text-text-muted">
-            {card.label}
-          </p>
+          <p className="text-sm font-medium text-text-muted">{card.label}</p>
 
           <p className="mt-3 text-3xl font-bold tracking-tight text-ink">
             {values[card.key].toLocaleString("en-US")}
           </p>
 
-          <p className="mt-1 text-xs text-text-muted">
-            {card.description}
-          </p>
+          <p className="mt-1 text-xs text-text-muted">{card.description}</p>
         </article>
       ))}
     </section>
