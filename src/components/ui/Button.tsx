@@ -11,12 +11,12 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center cursor-pointer justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-coral disabled:cursor-not-allowed disabled:opacity-50";
+    "inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-50";
 
   const variants = {
-    primary: "bg-coral text-white hover:bg-[#df6954]",
+    primary: "bg-action text-inverse hover:bg-action-hover",
     secondary:
-      "border border-border bg-surface text-text hover:bg-surface-muted",
+      "border border-border-strong bg-surface text-text-primary hover:bg-surface-muted",
   };
 
   return (

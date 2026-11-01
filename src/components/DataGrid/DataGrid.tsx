@@ -75,12 +75,12 @@ export function DataGrid<TData>({
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-surface">
+    <div className="overflow-hidden bg-surface">
       <GridToolbar table={table} />
 
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="bg-surface-muted text-text-muted">
+          <thead className="bg-[#e9e5dc] text-ink">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (

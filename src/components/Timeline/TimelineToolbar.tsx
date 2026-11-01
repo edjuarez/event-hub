@@ -17,7 +17,7 @@ export function TimelineToolbar({
     new Intl.NumberFormat("en-US").format(value);
 
   const buttonStyles =
-    "flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium text-text-secondary transition-all duration-200 hover:-translate-y-0.5 hover:border-accent hover:bg-surface-muted hover:text-text-primary hover:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-none";
+    "flex min-h-10 cursor-pointer items-center gap-2 rounded-lg border border-ink bg-ink px-4 py-2 text-sm font-semibold text-inverse shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary-strong hover:bg-primary-strong hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:border-border-strong disabled:bg-surface-muted disabled:text-text-muted disabled:opacity-100 disabled:hover:translate-y-0 disabled:hover:shadow-sm";
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl bg-surface px-5 py-3">
@@ -39,7 +39,6 @@ export function TimelineToolbar({
           onClick={onGoToStart}
           disabled={displayedCount === 0}
           aria-label="Go to start of timeline"
-          title="Go to start of timeline"
           className={buttonStyles}
         >
           <ChevronsUp size={16} aria-hidden="true" />
@@ -51,7 +50,6 @@ export function TimelineToolbar({
           onClick={onGoToEnd}
           disabled={displayedCount === 0}
           aria-label="Go to end of timeline"
-          title="Go to end of timeline"
           className={buttonStyles}
         >
           <ChevronsDown size={16} aria-hidden="true" />

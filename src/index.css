@@ -1,21 +1,46 @@
+
 @import "tailwindcss";
+
 :root {
-  --brand-ink: #172b3a;
-  --brand-coral: #f07861;
-  --brand-sage: #8fae9b;
+  /* Brand */
+  --ink: #093a60;
+  --primary: #e85d4a;
+  --primary-hover: #c94738;
+  --primary-strong: #b9382b;
+  --accent: #f4a340;
 
-  --background: #f7f6f2;
+  /* Semantic colors */
+  --success: #43866a;
+  --success-strong: #2f6b51;
+  --danger: #b42318;
+
+  /* Surfaces */
+  --background: #f7f5ef;
   --surface: #ffffff;
-  --surface-muted: #efeee8;
+  --surface-muted: #efeee7;
 
-  --text-primary: #263746;
-  --text-muted: #78838a;
-  --border: #e5e4de;
+  /* Text */
+  --text-primary: var(--ink);
+  --text-secondary: #465866;
+  --text-muted: #596a75;
+  --inverse: #ffffff;
 
-  --success: #638b72;
-  --warning: #d9a441;
-  --danger: #d7655d;
+  /* Borders and focus */
+  --border: #e3e1d9;
+  --border-strong: #7c8a94;
+  --focus: var(--ink);
 
+  /* Soft surfaces */
+  --success-soft: #e6f1eb;
+  --danger-soft: #fbe9e7;
+  --accent-soft: #fdf0dd;
+  --primary-soft: #fbe7e3;
+
+  /* Actions */
+  --action: var(--primary-hover);
+  --action-hover: var(--primary-strong);
+
+  color-scheme: light;
   font-family: "Manrope", sans-serif;
   color: var(--text-primary);
   background: var(--background);
@@ -29,19 +54,55 @@
 @theme inline {
   --font-sans: "Manrope", sans-serif;
 
-  --color-ink: var(--brand-ink);
-  --color-coral: var(--brand-coral);
-  --color-sage: var(--brand-sage);
+  /* Brand */
+  --color-ink: var(--ink);
+  --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
+  --color-accent: var(--accent);
 
+  /* Semantic colors */
+  --color-success: var(--success);
+  --color-success-strong: var(--success-strong);
+  --color-danger: var(--danger);
+
+  /* Surfaces */
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
 
-  --color-text: var(--text-primary);
+  /* Text */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
-  --color-border: var(--border);
+  --color-inverse: var(--inverse);
 
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-danger: var(--danger);
+  /* Borders and focus */
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-focus: var(--focus);
+
+  /* Soft surfaces */
+  --color-success-soft: var(--success-soft);
+  --color-danger-soft: var(--danger-soft);
+  --color-accent-soft: var(--accent-soft);
+  --color-primary-soft: var(--primary-soft);
+
+  /* Actions */
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+
+  /* Shadows */
+  --shadow-sm:
+    0 1px 2px 0 color-mix(in srgb, var(--ink) 8%, transparent);
+
+  --shadow-md:
+    0 4px 6px -1px color-mix(in srgb, var(--ink) 12%, transparent),
+    0 2px 4px -2px color-mix(in srgb, var(--ink) 8%, transparent);
+
+  --shadow-lg:
+    0 10px 15px -3px color-mix(in srgb, var(--ink) 14%, transparent),
+    0 4px 6px -4px color-mix(in srgb, var(--ink) 10%, transparent);
+
+  --shadow-2xl:
+    0 25px 50px -12px color-mix(in srgb, var(--ink) 28%, transparent);
 }

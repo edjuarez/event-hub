@@ -1,4 +1,3 @@
-
 export type EventsView = "table" | "timeline";
 
 interface ViewSelectorProps {
@@ -14,7 +13,7 @@ export function ViewSelector({ activeView, onViewChange }: ViewSelectorProps) {
 
   return (
     <div
-      className="inline-flex w-full rounded-xl border border-border bg-surface-muted p-1.5 sm:w-auto"
+      className="relative z-10 -mb-px inline-flex w-full items-end gap-1 sm:w-auto"
       role="group"
       aria-label="Select events view"
     >
@@ -27,10 +26,10 @@ export function ViewSelector({ activeView, onViewChange }: ViewSelectorProps) {
             type="button"
             onClick={() => onViewChange(option.value)}
             aria-pressed={isActive}
-            className={`flex min-h-12 flex-1 cursor-pointer items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold transition-all duration-200 sm:min-w-36 ${
+            className={`relative flex min-h-12 flex-1 cursor-pointer items-center justify-center rounded-t-xl border border-b-0 px-7 py-3 text-base font-bold tracking-wide transition-all duration-200 focus-visible:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:min-w-40 ${
               isActive
-                ? "bg-ink text-white shadow-md"
-                : "text-text-secondary hover:bg-surface hover:text-ink"
+                ? "border-border bg-surface text-ink"
+                : "border-transparent bg-surface-muted text-text-muted hover:bg-[#e9e5dc] hover:text-text-secondary"
             }`}
           >
             {option.label}
