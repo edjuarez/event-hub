@@ -260,7 +260,7 @@ export function Timeline({ events, totalCount, onLoadMore }: TimelineProps) {
         >
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute bottom-0 left-[46px] top-0 z-0 w-[3px] rounded-full bg-[#F07861]/50"
+            className="pointer-events-none absolute bottom-0 left-[51.5px] top-0 z-0 w-[3px] rounded-full bg-[#F07861]/50"
           />
 
           {virtualItems.map((virtualRow) => {

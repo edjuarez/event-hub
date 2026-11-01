@@ -29,7 +29,7 @@ export function ViewSelector({ activeView, onViewChange }: ViewSelectorProps) {
             className={`relative flex min-h-12 flex-1 cursor-pointer items-center justify-center rounded-t-xl border border-b-0 px-7 py-3 text-base font-bold tracking-wide transition-all duration-200 focus-visible:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:min-w-40 ${
               isActive
                 ? "border-border bg-surface text-ink"
-                : "border-transparent bg-surface-muted text-text-muted hover:bg-[#e9e5dc] hover:text-text-secondary"
+                : "border-transparent bg-[#e9e5dc] text-ink hover:bg-[#cecbc4] hover:text-text-secondary"
             }`}
           >
             {option.label}

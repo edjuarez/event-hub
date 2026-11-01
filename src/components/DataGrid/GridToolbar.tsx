@@ -1,3 +1,5 @@
+
+import { useEffect, useState } from "react";
 import type { Table } from "@tanstack/react-table";
 
 interface GridToolbarProps<TData> {
@@ -24,6 +26,24 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
   const categoryColumn = table.getColumn("category");
   const statusColumn = table.getColumn("status");
 
+  const currentTitleFilter =
+    (titleColumn?.getFilterValue() as string) ?? "";
+
+  const [titleInput, setTitleInput] = useState(currentTitleFilter);
+
+  useEffect(() => {
+    if (titleInput === currentTitleFilter) return;
+
+    const timeoutId = window.setTimeout(() => {
+      titleColumn?.setFilterValue(titleInput || undefined);
+    }, 200);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [titleInput, currentTitleFilter, titleColumn]);
+
+  const filteredCount = table.getFilteredRowModel().rows.length;
+  const visibleCount = table.getRowModel().rows.length;
+
   const columns = table
     .getAllLeafColumns()
     .filter((column) => column.getCanHide());
@@ -32,6 +52,7 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
     table.getState().globalFilter || table.getState().columnFilters.length > 0;
 
   function clearFilters() {
+    setTitleInput("");
     table.resetGlobalFilter();
     table.resetColumnFilters();
   }
@@ -51,10 +72,8 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
             id="filter-title"
             type="search"
             placeholder="Filter by title..."
-            value={(titleColumn?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              titleColumn?.setFilterValue(event.target.value || undefined)
-            }
+            value={titleInput}
+            onChange={(event) => setTitleInput(event.target.value)}
             className="h-[38px] rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-coral"
           />
         </div>
@@ -62,7 +81,7 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
         <div className="flex flex-col gap-1">
           <label
             htmlFor="filter-category"
-            className="text-xs font-medium text-text-muted"
+            className="text-sm font-medium text-text-muted"
           >
             Category
           </label>
@@ -73,7 +92,7 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
             onChange={(event) =>
               categoryColumn?.setFilterValue(event.target.value || undefined)
             }
-            className="h-[38px] rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-coral cursor-pointer"
+            className="h-[38px] cursor-pointer rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-coral"
           >
             <option value="">All categories</option>
 
@@ -88,7 +107,7 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
         <div className="flex flex-col gap-1">
           <label
             htmlFor="filter-status"
-            className="text-xs font-medium text-text-muted"
+            className="text-sm font-medium text-text-muted"
           >
             Status
           </label>
@@ -99,7 +118,7 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
             onChange={(event) =>
               statusColumn?.setFilterValue(event.target.value || undefined)
             }
-            className="h-[38px] rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-coral cursor-pointer"
+            className="h-[38px] cursor-pointer rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-coral"
           >
             <option value="">All statuses</option>
 
@@ -113,19 +132,19 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
 
         <div className="flex flex-col gap-1">
           <span
-            className="text-xs font-medium text-text-muted"
+            className="text-sm font-medium text-text-muted"
             aria-hidden="true"
           >
             &nbsp;
           </span>
 
           <details className="relative">
-            <summary className="flex h-[38px] cursor-pointer list-none items-center justify-center rounded-lg border border-border px-4 text-sm font-medium hover:bg-surface-muted">
+            <summary className="flex h-[38px] cursor-pointer list-none items-center justify-center rounded-lg border border-border px-4 text-sm font-medium hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
               Columns
             </summary>
 
             <div className="absolute right-0 top-full z-20 mt-2 min-w-48 rounded-lg border border-border bg-surface p-3 shadow-lg">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">
+              <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-text-muted">
                 Toggle columns
               </p>
 
@@ -155,18 +174,16 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
 
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-xs text-text-muted" aria-live="polite">
-          {table.getFilteredRowModel().rows.length === 0
+          {filteredCount === 0
             ? "No events found"
-            : `Showing ${table.getRowModel().rows.length} of ${table
-                .getFilteredRowModel()
-                .rows.length.toLocaleString()} events`}
+            : `Showing ${visibleCount} of ${filteredCount.toLocaleString()} events`}
         </p>
 
         {hasFilters && (
           <button
             type="button"
             onClick={clearFilters}
-            className="text-sm font-medium text-coral hover:underline"
+            className="cursor-pointer text-sm font-medium text-coral hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             Clear filters
           </button>

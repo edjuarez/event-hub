@@ -40,8 +40,8 @@ export function EventsPage() {
   );
 
   const timelineEvents = useMemo(
-    () => events.slice(0, timelineLimit),
-    [events, timelineLimit],
+    () => (activeView === "timeline" ? events.slice(0, timelineLimit) : []),
+    [activeView, events, timelineLimit],
   );
 
   const handleLoadMoreTimeline = useCallback(() => {
@@ -90,8 +90,22 @@ export function EventsPage() {
 
   if (loading) {
     return (
-      <main className="mx-auto max-w-7xl px-6 py-12">
-        <p className="text-text-muted">Loading events...</p>
+      <main className="flex min-h-[60vh] items-center justify-center px-6 py-12">
+        <div className="flex flex-col items-center gap-5 text-center">
+          <div
+            className="h-12 w-12 animate-spin rounded-full border-4 border-border border-t-primary"
+            aria-hidden="true"
+          />
+
+          <div>
+            <p className="text-xl font-bold text-ink sm:text-2xl">
+              Loading events...
+            </p>
+            <p className="mt-2 text-sm text-text-muted">
+              Preparing your event dashboard
+            </p>
+          </div>
+        </div>
       </main>
     );
   }
@@ -163,12 +177,10 @@ export function EventsPage() {
       <section className="mt-10">
         <div className="mb-0 flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
           <div className="flex flex-wrap items-center gap-3">
-            <h2 className="text-lg font-semibold text-ink mb-5">All Events</h2>
-
             <div className="flex flex-wrap mb-5 items-center gap-3">
               <div className="min-w-32 rounded-xl border border-border bg-surface px-5 py-3 shadow-sm transition-shadow hover:shadow-md">
                 <p className="text-xs font-bold uppercase tracking-wider text-text-muted">
-                  Total
+                  Total Events
                 </p>
                 <p className="mt-1 text-xl font-bold tabular-nums text-ink">
                   {events.length.toLocaleString("en-US")}

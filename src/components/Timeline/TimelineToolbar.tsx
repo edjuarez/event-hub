@@ -20,7 +20,7 @@ export function TimelineToolbar({
     "flex min-h-10 cursor-pointer items-center gap-2 rounded-lg border border-ink bg-ink px-4 py-2 text-sm font-semibold text-inverse shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary-strong hover:bg-primary-strong hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:border-border-strong disabled:bg-surface-muted disabled:text-text-muted disabled:opacity-100 disabled:hover:translate-y-0 disabled:hover:shadow-sm";
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl bg-surface px-5 py-3">
+    <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl bg-surface px-5 pt-4">
       <p className="text-sm text-text-muted" aria-live="polite">
         Showing{" "}
         <span className="font-semibold text-text-primary">
