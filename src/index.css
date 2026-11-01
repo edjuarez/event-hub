@@ -1,4 +1,3 @@
-
 @import "tailwindcss";
 
 :root {
@@ -92,8 +91,7 @@
   --color-action-hover: var(--action-hover);
 
   /* Shadows */
-  --shadow-sm:
-    0 1px 2px 0 color-mix(in srgb, var(--ink) 8%, transparent);
+  --shadow-sm: 0 1px 2px 0 color-mix(in srgb, var(--ink) 8%, transparent);
 
   --shadow-md:
     0 4px 6px -1px color-mix(in srgb, var(--ink) 12%, transparent),
@@ -103,6 +101,6 @@
     0 10px 15px -3px color-mix(in srgb, var(--ink) 14%, transparent),
     0 4px 6px -4px color-mix(in srgb, var(--ink) 10%, transparent);
 
-  --shadow-2xl:
-    0 25px 50px -12px color-mix(in srgb, var(--ink) 28%, transparent);
+  --shadow-2xl: 0 25px 50px -12px
+    color-mix(in srgb, var(--ink) 28%, transparent);
 }
