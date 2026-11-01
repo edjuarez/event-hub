@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import type { Table } from "@tanstack/react-table";
 
@@ -26,8 +25,7 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
   const categoryColumn = table.getColumn("category");
   const statusColumn = table.getColumn("status");
 
-  const currentTitleFilter =
-    (titleColumn?.getFilterValue() as string) ?? "";
+  const currentTitleFilter = (titleColumn?.getFilterValue() as string) ?? "";
 
   const [titleInput, setTitleInput] = useState(currentTitleFilter);
 
@@ -63,7 +61,7 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
         <div className="flex flex-col gap-1">
           <label
             htmlFor="filter-title"
-            className="text-xs font-medium text-text-muted"
+            className="text-sm font-medium text-text-muted"
           >
             Event title
           </label>
@@ -173,7 +171,7 @@ export function GridToolbar<TData>({ table }: GridToolbarProps<TData>) {
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-xs text-text-muted" aria-live="polite">
+        <p className="text-sm text-text-muted" aria-live="polite">
           {filteredCount === 0
             ? "No events found"
             : `Showing ${visibleCount} of ${filteredCount.toLocaleString()} events`}

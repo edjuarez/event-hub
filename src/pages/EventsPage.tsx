@@ -1,14 +1,16 @@
-import { useCallback, useMemo, useState } from "react";
-
+import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import { useEvents } from "../hooks/useEvents";
 import { Button } from "../components/ui/Button";
 import { ViewSelector, type EventsView } from "../components/ui/ViewSelector";
 import { DataGrid } from "../components/DataGrid/DataGrid";
 import { getGridColumns } from "../config/gridColumns";
-import { Timeline } from "../components/Timeline/Timeline";
 import { EventFormModal } from "../components/EventForm/EventFormModal";
 import type { CalendarEvent } from "../types/event";
-
+const Timeline = lazy(() =>
+  import("../components/Timeline/Timeline").then((module) => ({
+    default: module.Timeline,
+  })),
+);
 const TIMELINE_BATCH_SIZE = 10_000;
 
 export function EventsPage() {
@@ -214,11 +216,22 @@ export function EventsPage() {
           {activeView === "table" ? (
             <DataGrid data={events} columns={columns} />
           ) : (
-            <Timeline
-              events={timelineEvents}
-              totalCount={events.length}
-              onLoadMore={handleLoadMoreTimeline}
-            />
+            <Suspense
+              fallback={
+                <div
+                  role="status"
+                  className="flex min-h-[300px] items-center justify-center text-sm text-text-muted"
+                >
+                  Loading timeline...
+                </div>
+              }
+            >
+              <Timeline
+                events={timelineEvents}
+                totalCount={events.length}
+                onLoadMore={handleLoadMoreTimeline}
+              />
+            </Suspense>
           )}
         </div>
       </section>

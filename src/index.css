@@ -40,7 +40,7 @@
   --action-hover: var(--primary-strong);
 
   color-scheme: light;
-  font-family: "Manrope", sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   color: var(--text-primary);
   background: var(--background);
 
@@ -51,7 +51,7 @@
 }
 
 @theme inline {
-  --font-sans: "Manrope", sans-serif;
+  --font-sans: Arial, Helvetica, sans-serif;
 
   /* Brand */
   --color-ink: var(--ink);
