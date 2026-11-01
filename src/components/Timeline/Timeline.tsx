@@ -247,6 +247,10 @@ export function Timeline({ events, totalCount }: TimelineProps) {
           className="relative w-full"
           style={{ height: `${virtualizer.getTotalSize()}px` }}
         >
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-0 left-[46px] top-0 z-0 w-[3px] rounded-full bg-[#F07861]/50"
+          />
           {virtualItems.map((virtualRow) => {
             const row = rows[virtualRow.index];
 

@@ -7,6 +7,8 @@ interface UseEventsResult {
   events: CalendarEvent[];
   loading: boolean;
   error: string | null;
+  addEvent: (event: CalendarEvent) => void;
+  updateEvent: (event: CalendarEvent) => void;
 }
 
 export function useEvents(): UseEventsResult {
@@ -29,5 +31,23 @@ export function useEvents(): UseEventsResult {
     loadEvents();
   }, []);
 
-  return { events, loading, error };
+  const addEvent = (event: CalendarEvent) => {
+    setEvents((currentEvents) => [...currentEvents, event]);
+  };
+
+  const updateEvent = (updatedEvent: CalendarEvent) => {
+    setEvents((currentEvents) =>
+      currentEvents.map((event) =>
+        event.id === updatedEvent.id ? updatedEvent : event,
+      ),
+    );
+  };
+
+  return {
+    events,
+    loading,
+    error,
+    addEvent,
+    updateEvent,
+  };
 }
