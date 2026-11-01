@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from "react";
 
 import type { CalendarEvent } from "../../types/event";
@@ -77,11 +76,7 @@ export function EventFormModal({
       </div>
 
       <div className="p-6">
-        <EventForm
-          event={event}
-          onSave={onSave}
-          onCancel={onClose}
-        />
+        <EventForm event={event} onSave={onSave} onCancel={onClose} />
       </div>
     </dialog>
   );

@@ -1,24 +1,17 @@
-
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { useEvents } from "../hooks/useEvents";
 import { Button } from "../components/ui/Button";
 import { SummaryCards } from "../components/ui/SummaryCards";
 import { ViewSelector, type EventsView } from "../components/ui/ViewSelector";
 import { DataGrid } from "../components/DataGrid/DataGrid";
-import { gridColumns } from "../config/gridColumns";
+import { getGridColumns } from "../config/gridColumns";
 import { Timeline } from "../components/Timeline/Timeline";
 import { EventFormModal } from "../components/EventForm/EventFormModal";
 import type { CalendarEvent } from "../types/event";
 
 export function EventsPage() {
-  const {
-    events,
-    loading,
-    error,
-    addEvent,
-    updateEvent,
-  } = useEvents();
+  const { events, loading, error, addEvent, updateEvent } = useEvents();
 
   const [activeView, setActiveView] = useState<EventsView>("table");
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -33,6 +26,17 @@ export function EventsPage() {
     setIsFormOpen(true);
   };
 
+  const handleEditEvent = useCallback((event: CalendarEvent) => {
+    setSelectedEvent(event);
+    setSuccessMessage("");
+    setIsFormOpen(true);
+  }, []);
+
+  const columns = useMemo(
+    () => getGridColumns(handleEditEvent),
+    [handleEditEvent],
+  );
+
   const handleCloseForm = () => {
     setIsFormOpen(false);
     setSelectedEvent(null);
@@ -44,12 +48,14 @@ export function EventsPage() {
         ...eventData,
         id: selectedEvent.id,
       });
+
       setSuccessMessage("Event updated successfully.");
     } else {
       addEvent({
         ...eventData,
         id: crypto.randomUUID(),
       });
+
       setSuccessMessage("Event created successfully.");
     }
 
@@ -127,17 +133,14 @@ export function EventsPage() {
             </p>
           </div>
 
-          <ViewSelector
-            activeView={activeView}
-            onViewChange={setActiveView}
-          />
+          <ViewSelector activeView={activeView} onViewChange={setActiveView} />
         </div>
 
         <div className="overflow-hidden rounded-xl border border-border bg-surface">
           {activeView === "table" ? (
             <DataGrid
               data={events}
-              columns={gridColumns}
+              columns={columns}
               loading={loading}
               error={error}
             />

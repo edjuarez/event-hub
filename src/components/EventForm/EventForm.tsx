@@ -1,6 +1,6 @@
-
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { Button } from "../ui/Button";
 
 import type { CalendarEvent, EventStatus } from "../../types/event";
 
@@ -215,25 +215,17 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
       </div>
 
       <div className="flex justify-end gap-3 border-t border-border pt-5">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="cursor-pointer rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-text-secondary transition hover:bg-surface-muted"
-        >
+        <Button type="button" variant="secondary" onClick={onCancel}>
           Cancel
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="submit"
           disabled={isSubmitting}
-          className="bg-coral text-white hover:bg-[#df6954] cursor-pointer rounded-lg px-4 py-2.5 text-sm font-semibold text-text-secondary transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+          className="hover:-translate-y-0.5 hover:shadow-md"
         >
-          {isSubmitting
-            ? "Saving..."
-            : event
-              ? "Save changes"
-              : "Create event"}
-        </button>
+          {isSubmitting ? "Saving..." : event ? "Save changes" : "Create event"}
+        </Button>
       </div>
     </form>
   );

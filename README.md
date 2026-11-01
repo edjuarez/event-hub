@@ -44,14 +44,16 @@ src/
 ├── pages/
 ├── services/
 ├── types/
+├── utils/
 ├── App.tsx
 └── main.tsx
-
 ```
 
 ## Technical Decisions
 
 - **TanStack Table:** Provides table functionality without imposing UI or styling, allowing a reusable and customizable DataGrid.
+- **TanStack Virtual:** Reduces the number of rendered timeline elements by displaying only visible items.
+- **React Hook Form:** Simplifies form state management and validation, reduces unnecessary re-renders, and provides built-in support for handling submissions and focusing invalid fields.
 - **Deterministic mock data:** Generates consistent datasets for testing large volumes without requiring an API or database.
 - **Service layer:** Separates data loading from UI components, making future integration with an API easier.
 - **React state:** Keeps shared event data centralized without introducing unnecessary state management dependencies.
