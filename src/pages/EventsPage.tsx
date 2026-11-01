@@ -1,4 +1,6 @@
+
 import { useState } from "react";
+
 import { useEvents } from "../hooks/useEvents";
 import { Button } from "../components/ui/Button";
 import { SummaryCards } from "../components/ui/SummaryCards";
@@ -6,10 +8,53 @@ import { ViewSelector, type EventsView } from "../components/ui/ViewSelector";
 import { DataGrid } from "../components/DataGrid/DataGrid";
 import { gridColumns } from "../config/gridColumns";
 import { Timeline } from "../components/Timeline/Timeline";
+import { EventFormModal } from "../components/EventForm/EventFormModal";
+import type { CalendarEvent } from "../types/event";
 
 export function EventsPage() {
-  const { events, loading, error } = useEvents();
+  const {
+    events,
+    loading,
+    error,
+    addEvent,
+    updateEvent,
+  } = useEvents();
+
   const [activeView, setActiveView] = useState<EventsView>("table");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
+    null,
+  );
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const handleNewEvent = () => {
+    setSelectedEvent(null);
+    setSuccessMessage("");
+    setIsFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+    setSelectedEvent(null);
+  };
+
+  const handleSaveEvent = (eventData: Omit<CalendarEvent, "id">) => {
+    if (selectedEvent) {
+      updateEvent({
+        ...eventData,
+        id: selectedEvent.id,
+      });
+      setSuccessMessage("Event updated successfully.");
+    } else {
+      addEvent({
+        ...eventData,
+        id: crypto.randomUUID(),
+      });
+      setSuccessMessage("Event created successfully.");
+    }
+
+    handleCloseForm();
+  };
 
   if (loading) {
     return (
@@ -50,11 +95,21 @@ export function EventsPage() {
           </p>
         </div>
 
-        <Button type="button">
+        <Button type="button" onClick={handleNewEvent}>
           <span aria-hidden="true">+</span>
           New Event
         </Button>
       </section>
+
+      {successMessage && (
+        <p
+          role="status"
+          aria-live="polite"
+          className="mb-5 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"
+        >
+          {successMessage}
+        </p>
+      )}
 
       <SummaryCards
         total={events.length}
@@ -72,7 +127,10 @@ export function EventsPage() {
             </p>
           </div>
 
-          <ViewSelector activeView={activeView} onViewChange={setActiveView} />
+          <ViewSelector
+            activeView={activeView}
+            onViewChange={setActiveView}
+          />
         </div>
 
         <div className="overflow-hidden rounded-xl border border-border bg-surface">
@@ -91,6 +149,13 @@ export function EventsPage() {
           )}
         </div>
       </section>
+
+      <EventFormModal
+        isOpen={isFormOpen}
+        event={selectedEvent}
+        onClose={handleCloseForm}
+        onSave={handleSaveEvent}
+      />
     </main>
   );
 }
