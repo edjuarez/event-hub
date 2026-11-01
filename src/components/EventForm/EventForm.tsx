@@ -1,5 +1,6 @@
+
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "../ui/Button";
 
 import type { CalendarEvent, EventStatus } from "../../types/event";
@@ -34,7 +35,7 @@ const statusOptions: { value: EventStatus; label: string }[] = [
   { value: "scheduled", label: "Scheduled" },
   { value: "in-progress", label: "In Progress" },
   { value: "completed", label: "Completed" },
-  { value: "cancelled", label: "Cancelled" },
+  { value: "cancelled", label: "Cancelled"},
 ];
 
 const fieldStyles =
@@ -44,9 +45,10 @@ const errorStyles = "mt-1 text-xs text-danger";
 
 export function EventForm({ event, onSave, onCancel }: EventFormProps) {
   const {
-    register,
+    control,
     handleSubmit,
     reset,
+    setFocus,
     formState: { errors, isSubmitting },
   } = useForm<EventFormValues>({
     defaultValues: {
@@ -56,6 +58,7 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
       category: "",
       status: "scheduled",
     },
+    shouldFocusError: true,
   });
 
   useEffect(() => {
@@ -78,8 +81,22 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
     });
   };
 
+  const handleInvalidSubmit = () => {
+    const firstInvalidField = (
+      ["title", "date", "category", "status"] as const
+    ).find((field) => errors[field]);
+
+    if (firstInvalidField) {
+      setFocus(firstInvalidField);
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit(submitForm)} noValidate className="space-y-5">
+    <form
+      onSubmit={handleSubmit(submitForm, handleInvalidSubmit)}
+      noValidate
+      className="space-y-5"
+    >
       <div>
         <label
           htmlFor="event-title"
@@ -88,14 +105,10 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
           Event title <span className="text-danger">*</span>
         </label>
 
-        <input
-          id="event-title"
-          type="text"
-          placeholder="e.g. Product launch"
-          aria-invalid={Boolean(errors.title)}
-          aria-describedby={errors.title ? "event-title-error" : undefined}
-          className={fieldStyles}
-          {...register("title", {
+        <Controller
+          name="title"
+          control={control}
+          rules={{
             required: "Title is required.",
             minLength: {
               value: 3,
@@ -103,14 +116,34 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
             },
             validate: (value) =>
               value.trim().length > 0 || "Title is required.",
-          })}
-        />
+          }}
+          render={({ field, fieldState }) => (
+            <>
+              <input
+                {...field}
+                id="event-title"
+                type="text"
+                placeholder="e.g. Product launch"
+                value={field.value ?? ""}
+                aria-invalid={fieldState.invalid}
+                aria-describedby={
+                  fieldState.error ? "event-title-error" : undefined
+                }
+                className={fieldStyles}
+              />
 
-        {errors.title && (
-          <p id="event-title-error" className={errorStyles} role="alert">
-            {errors.title.message}
-          </p>
-        )}
+              {fieldState.error && (
+                <p
+                  id="event-title-error"
+                  className={errorStyles}
+                  role="alert"
+                >
+                  {fieldState.error.message}
+                </p>
+              )}
+            </>
+          )}
+        />
       </div>
 
       <div>
@@ -121,12 +154,19 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
           Description
         </label>
 
-        <textarea
-          id="event-description"
-          rows={3}
-          placeholder="Add some details about this event..."
-          className={fieldStyles}
-          {...register("description")}
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => (
+            <textarea
+              {...field}
+              id="event-description"
+              rows={3}
+              placeholder="Add some details about this event..."
+              value={field.value ?? ""}
+              className={fieldStyles}
+            />
+          )}
         />
       </div>
 
@@ -138,26 +178,42 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
           Date and time <span className="text-danger">*</span>
         </label>
 
-        <input
-          id="event-date"
-          type="datetime-local"
-          aria-invalid={Boolean(errors.date)}
-          aria-describedby={errors.date ? "event-date-error" : undefined}
-          className={fieldStyles}
-          {...register("date", {
+        <Controller
+          name="date"
+          control={control}
+          rules={{
             required: "Date and time are required.",
             validate: (value) =>
-              (!Number.isNaN(new Date(value).getTime()) &&
-                value.trim().length > 0) ||
+              (value.trim().length > 0 &&
+                !Number.isNaN(new Date(value).getTime())) ||
               "Please enter a valid date and time.",
-          })}
-        />
+          }}
+          render={({ field, fieldState }) => (
+            <>
+              <input
+                {...field}
+                id="event-date"
+                type="datetime-local"
+                value={field.value ?? ""}
+                aria-invalid={fieldState.invalid}
+                aria-describedby={
+                  fieldState.error ? "event-date-error" : undefined
+                }
+                className={fieldStyles}
+              />
 
-        {errors.date && (
-          <p id="event-date-error" className={errorStyles} role="alert">
-            {errors.date.message}
-          </p>
-        )}
+              {fieldState.error && (
+                <p
+                  id="event-date-error"
+                  className={errorStyles}
+                  role="alert"
+                >
+                  {fieldState.error.message}
+                </p>
+              )}
+            </>
+          )}
+        />
       </div>
 
       <div>
@@ -168,27 +224,41 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
           Category <span className="text-danger">*</span>
         </label>
 
-        <input
-          id="event-category"
-          type="text"
-          placeholder="e.g. Conference"
-          aria-invalid={Boolean(errors.category)}
-          aria-describedby={
-            errors.category ? "event-category-error" : undefined
-          }
-          className={fieldStyles}
-          {...register("category", {
+        <Controller
+          name="category"
+          control={control}
+          rules={{
             required: "Category is required.",
             validate: (value) =>
               value.trim().length > 0 || "Category is required.",
-          })}
-        />
+          }}
+          render={({ field, fieldState }) => (
+            <>
+              <input
+                {...field}
+                id="event-category"
+                type="text"
+                placeholder="e.g. Conference"
+                value={field.value ?? ""}
+                aria-invalid={fieldState.invalid}
+                aria-describedby={
+                  fieldState.error ? "event-category-error" : undefined
+                }
+                className={fieldStyles}
+              />
 
-        {errors.category && (
-          <p id="event-category-error" className={errorStyles} role="alert">
-            {errors.category.message}
-          </p>
-        )}
+              {fieldState.error && (
+                <p
+                  id="event-category-error"
+                  className={errorStyles}
+                  role="alert"
+                >
+                  {fieldState.error.message}
+                </p>
+              )}
+            </>
+          )}
+        />
       </div>
 
       <div>
@@ -199,19 +269,27 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
           Status
         </label>
 
-        <select
-          id="event-status"
-          className={fieldStyles}
-          {...register("status", {
+        <Controller
+          name="status"
+          control={control}
+          rules={{
             required: "Status is required.",
-          })}
-        >
-          {statusOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+          }}
+          render={({ field }) => (
+            <select
+              {...field}
+              id="event-status"
+              value={field.value ?? "scheduled"}
+              className={fieldStyles}
+            >
+              {statusOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          )}
+        />
       </div>
 
       <div className="flex justify-end gap-3 border-t border-border pt-5">

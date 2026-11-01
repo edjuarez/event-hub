@@ -1,8 +1,8 @@
+
 import { useCallback, useMemo, useState } from "react";
 
 import { useEvents } from "../hooks/useEvents";
 import { Button } from "../components/ui/Button";
-import { SummaryCards } from "../components/ui/SummaryCards";
 import { ViewSelector, type EventsView } from "../components/ui/ViewSelector";
 import { DataGrid } from "../components/DataGrid/DataGrid";
 import { getGridColumns } from "../config/gridColumns";
@@ -62,6 +62,19 @@ export function EventsPage() {
     handleCloseForm();
   };
 
+  const eventCounts = useMemo(
+    () =>
+      events.reduce(
+        (counts, event) => {
+          if (event.status === "scheduled") counts.scheduled += 1;
+          if (event.status === "completed") counts.completed += 1;
+          return counts;
+        },
+        { scheduled: 0, completed: 0 },
+      ),
+    [events],
+  );
+
   if (loading) {
     return (
       <main className="mx-auto max-w-7xl px-6 py-12">
@@ -79,14 +92,6 @@ export function EventsPage() {
       </main>
     );
   }
-
-  const scheduledCount = events.filter(
-    (event) => event.status === "scheduled",
-  ).length;
-
-  const completedCount = events.filter(
-    (event) => event.status === "completed",
-  ).length;
 
   return (
     <main className="mx-auto min-h-screen max-w-7xl px-6 py-10">
@@ -117,24 +122,59 @@ export function EventsPage() {
         </p>
       )}
 
-      <SummaryCards
-        total={events.length}
-        scheduled={scheduledCount}
-        completed={completedCount}
-      />
-
       <section className="mt-10">
-        <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
+        <div className="mb-5 flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+          <div className="flex flex-wrap items-center gap-3">
             <h2 className="text-lg font-semibold text-ink">All Events</h2>
 
-            <p className="mt-1 text-sm text-text-muted">
-              Browse and manage your events.
-            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="flex min-w-28 items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2">
+                <span className="h-2 w-2 shrink-0 rounded-full bg-ink" />
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-wide text-text-muted">
+                    Total
+                  </p>
+                  <p className="text-sm font-bold tabular-nums text-ink">
+                    {events.length.toLocaleString("en-US")}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex min-w-28 items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2">
+                <span className="h-2 w-2 shrink-0 rounded-full bg-[#8FAE9B]" />
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-wide text-text-muted">
+                    Scheduled
+                  </p>
+                  <p className="text-sm font-bold tabular-nums text-ink">
+                    {eventCounts.scheduled.toLocaleString("en-US")}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex min-w-28 items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2">
+                <span className="h-2 w-2 shrink-0 rounded-full bg-[#172B3A]" />
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-wide text-text-muted">
+                    Completed
+                  </p>
+                  <p className="text-sm font-bold tabular-nums text-ink">
+                    {eventCounts.completed.toLocaleString("en-US")}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <ViewSelector activeView={activeView} onViewChange={setActiveView} />
+          <ViewSelector
+            activeView={activeView}
+            onViewChange={setActiveView}
+          />
         </div>
+
+        <p className="mb-4 text-sm text-text-muted">
+          Browse and manage your events.
+        </p>
 
         <div className="overflow-hidden rounded-xl border border-border bg-surface">
           {activeView === "table" ? (
