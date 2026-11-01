@@ -11,6 +11,7 @@ import { TimelineToolbar } from "./TimelineToolbar";
 interface TimelineProps {
   events: CalendarEvent[];
   totalCount: number;
+  onLoadMore: () => void;
 }
 
 type TimelineRow =
@@ -32,7 +33,9 @@ type TimelineRow =
       headingId: string;
     };
 
-export function Timeline({ events, totalCount }: TimelineProps) {
+const BATCH_SIZE = 10_000;
+
+export function Timeline({ events, totalCount, onLoadMore }: TimelineProps) {
   const parentRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef(new Map<string, HTMLElement>());
 
@@ -105,6 +108,13 @@ export function Timeline({ events, totalCount }: TimelineProps) {
   const hasActiveEvent = rows.some(
     (row) => row.type === "event" && row.key === activeEventKey,
   );
+
+  const remainingCount = Math.max(totalCount - events.length, 0);
+  const nextBatchCount = Math.min(BATCH_SIZE, remainingCount);
+  const hasMoreEvents = remainingCount > 0;
+
+  const formatNumber = (value: number) =>
+    new Intl.NumberFormat("en-US").format(value);
 
   const focusEvent = (rowIndex: number) => {
     const row = rows[rowIndex];
@@ -228,7 +238,7 @@ export function Timeline({ events, totalCount }: TimelineProps) {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <TimelineToolbar
         displayedCount={events.length}
         totalCount={totalCount}
@@ -238,6 +248,7 @@ export function Timeline({ events, totalCount }: TimelineProps) {
 
       <div
         ref={parentRef}
+        id="timeline-scroll-region"
         role="region"
         aria-label="Events timeline"
         tabIndex={-1}
@@ -251,6 +262,7 @@ export function Timeline({ events, totalCount }: TimelineProps) {
             aria-hidden="true"
             className="pointer-events-none absolute bottom-0 left-[46px] top-0 z-0 w-[3px] rounded-full bg-[#F07861]/50"
           />
+
           {virtualItems.map((virtualRow) => {
             const row = rows[virtualRow.index];
 
@@ -259,7 +271,7 @@ export function Timeline({ events, totalCount }: TimelineProps) {
                 key={row.key}
                 data-index={virtualRow.index}
                 ref={virtualizer.measureElement}
-                className="absolute left-0 top-0 w-full pb-3"
+                className="absolute left-0 top-0 w-full pb-3 pt-3"
                 style={{
                   transform: `translateY(${virtualRow.start}px)`,
                 }}
@@ -300,6 +312,17 @@ export function Timeline({ events, totalCount }: TimelineProps) {
             );
           })}
         </div>
+        {hasMoreEvents && (
+          <div className="flex justify-center py-3">
+            <button
+              type="button"
+              onClick={onLoadMore}
+              className="cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-primary-strong transition-colors hover:bg-primary-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+            >
+              Load {formatNumber(nextBatchCount)} more events ↓
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="sr-only" aria-live="polite" aria-atomic="true">

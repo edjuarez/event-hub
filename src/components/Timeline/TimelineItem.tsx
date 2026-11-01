@@ -54,7 +54,7 @@ export function TimelineItem({
     <div className="relative flex w-full items-center gap-4">
       <span
         aria-hidden="true"
-        className="relative z-10 flex h-15 w-15 shrink-0 items-center justify-center rounded-full border-[3px] border-background bg-ink text-lg font-bold tabular-nums text-white shadow-sm"
+        className="relative z-10 flex h-18 w-18 shrink-0 items-center justify-center rounded-full border-[3px] border-background bg-ink text-base font-bold tabular-nums text-white shadow-sm"
       >
         {String(eventNumber).padStart(2, "0")}
       </span>

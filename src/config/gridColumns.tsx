@@ -90,7 +90,7 @@ export function getGridColumns(
           type="button"
           onClick={() => onEdit(row.original)}
           aria-label={`Edit ${row.original.title}`}
-          className="cursor-pointer rounded-md px-3 py-1.5 text-sm font-semibold text-accent transition-colors hover:bg-accent/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="cursor-pointer rounded-lg border border-primary-strong/25 bg-primary-soft px-3.5 py-2 text-sm font-bold text-primary-strong shadow-sm transition-all duration-200 hover:border-primary-strong hover:bg-primary-strong hover:text-inverse hover:shadow-md active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
           Edit
         </button>

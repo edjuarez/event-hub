@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "../ui/Button";
@@ -35,13 +34,16 @@ const statusOptions: { value: EventStatus; label: string }[] = [
   { value: "scheduled", label: "Scheduled" },
   { value: "in-progress", label: "In Progress" },
   { value: "completed", label: "Completed" },
-  { value: "cancelled", label: "Cancelled"},
+  { value: "cancelled", label: "Cancelled" },
 ];
 
 const fieldStyles =
-  "mt-1 w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20";
+  "mt-1 w-full rounded-lg border border-border-strong bg-surface px-3 py-2.5 text-sm text-text-primary shadow-sm outline-none transition-all duration-200 placeholder:text-text-muted hover:border-text-secondary focus:border-primary-strong focus:ring-2 focus:ring-primary/25 aria-[invalid=true]:border-danger aria-[invalid=true]:focus:ring-danger/20";
 
-const errorStyles = "mt-1 text-xs text-danger";
+const errorStyles =
+  "mt-1.5 rounded-md border border-danger/20 bg-danger-soft px-2.5 py-1.5 text-xs font-medium text-danger";
+
+const labelStyles = "block text-sm font-semibold text-text-primary";
 
 export function EventForm({ event, onSave, onCancel }: EventFormProps) {
   const {
@@ -98,10 +100,7 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
       className="space-y-5"
     >
       <div>
-        <label
-          htmlFor="event-title"
-          className="block text-sm font-medium text-text-primary"
-        >
+        <label htmlFor="event-title" className={labelStyles}>
           Event title <span className="text-danger">*</span>
         </label>
 
@@ -133,11 +132,7 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
               />
 
               {fieldState.error && (
-                <p
-                  id="event-title-error"
-                  className={errorStyles}
-                  role="alert"
-                >
+                <p id="event-title-error" className={errorStyles} role="alert">
                   {fieldState.error.message}
                 </p>
               )}
@@ -147,10 +142,7 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="event-description"
-          className="block text-sm font-medium text-text-primary"
-        >
+        <label htmlFor="event-description" className={labelStyles}>
           Description
         </label>
 
@@ -171,10 +163,7 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="event-date"
-          className="block text-sm font-medium text-text-primary"
-        >
+        <label htmlFor="event-date" className={labelStyles}>
           Date and time <span className="text-danger">*</span>
         </label>
 
@@ -203,11 +192,7 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
               />
 
               {fieldState.error && (
-                <p
-                  id="event-date-error"
-                  className={errorStyles}
-                  role="alert"
-                >
+                <p id="event-date-error" className={errorStyles} role="alert">
                   {fieldState.error.message}
                 </p>
               )}
@@ -217,10 +202,7 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="event-category"
-          className="block text-sm font-medium text-text-primary"
-        >
+        <label htmlFor="event-category" className={labelStyles}>
           Category <span className="text-danger">*</span>
         </label>
 
@@ -262,10 +244,7 @@ export function EventForm({ event, onSave, onCancel }: EventFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="event-status"
-          className="block text-sm font-medium text-text-primary"
-        >
+        <label htmlFor="event-status" className={labelStyles}>
           Status
         </label>
 
